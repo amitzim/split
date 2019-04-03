@@ -5,7 +5,8 @@
 
 #define SIZE(arr) sizeof(*arr)/sizeof(arr[0])
 
-char *str1 = "Hi.my.name.is.Amit";
+
+char *str1 = "...Hi...my.name.is.Amit......";
 char *str2 = "Hi my name is Amit";
 
 int number_of_delimeters(char *str, char delim);
@@ -16,24 +17,32 @@ void print_string_array(char **arr, int nelem);
 
 int main(int argc, char *argv[]){
 	split(str1, '.');
+	split(str1, ' ');
+	split(str2, ' ');
+	split("", ' ');
+
 	return 0;
 }
 
 int number_of_delimeters(char *str, char delim){
 	int res = 0;
+	while (*str == delim) str++;
 	while (*str != '\0'){
-		if (*str == delim)
+		if (*str == delim && *str != *(str - 1)){
 			res++;
+		}
 		str++;
 	}
-	return res;
+	if (*(str - 1) != delim) res++;
+	return (res == 0) ? 1 : res;
 }
 
 
 void parse(char ***res, char *str, char delim, int number_of_elements){
 	char **str_arr = *res;
 	char *start = str;
-	char *end = str;
+	while (*start == delim) start++;
+	char *end = start;
 	int current_element = 0;
 	char *temp = NULL;
 	int size = 0;
@@ -43,11 +52,16 @@ void parse(char ***res, char *str, char delim, int number_of_elements){
 			size++;
 			end++;
 		}
+		if (*(end - 1) == *end && *end == delim){
+			end++;
+			start = end;
+			continue;
+		}
 		temp = (char *)malloc(sizeof(size) + 1);
 		strncpy(temp, start, size);
 		temp[size] = '\0';
 		str_arr[current_element] = temp;
-		// printf("temp: %s\n", temp);
+		
 		current_element++;
 		if (*end == '\0'){
 			break;
@@ -86,14 +100,11 @@ char **split(char *str, ...){
 	}
 	va_end(args);
 	printf("delimeter is: '%c'\n", delimeter);
-	int number_of_elements = number_of_delimeters(str, delimeter) + 1;
+	int number_of_elements = number_of_delimeters(str, delimeter);
 	printf("number_of_elements: %d\n", number_of_elements);
 	
 	res = malloc(sizeof(char (*)[]) * number_of_elements);
-	// printf("HERE1\n");
-	// print_string_array(res, number_of_elements);
 	parse(&res, str, delimeter, number_of_elements);
-	// printf("HERE2\n");
 	print_string_array(res, number_of_elements);
 	return res;
 }
