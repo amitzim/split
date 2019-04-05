@@ -2,27 +2,10 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdarg.h>
-
-#define SIZE(arr) sizeof(*arr)/sizeof(arr[0])
-
+#include "split.h"
 
 char *str1 = "...Hi...my.name.is.Amit......";
 char *str2 = "Hi my name is Amit";
-
-int number_of_delimeters(char *str, char delim);
-char **split(char *str, ...);
-void parse(char ***res, char *str, char delim, int number_of_elements);
-void print_string_array(char **arr, int nelem);
-
-
-int main(int argc, char *argv[]){
-	split(str1, '.');
-	split(str1, ' ');
-	split(str2, ' ');
-	split("", ' ');
-
-	return 0;
-}
 
 int number_of_delimeters(char *str, char delim){
 	int res = 0;
